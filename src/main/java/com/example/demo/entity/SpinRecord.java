@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.entity;
 
+import com.example.demo.converter.StringListConverter;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
@@ -14,7 +15,7 @@ public class SpinRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private int userId;
