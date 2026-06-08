@@ -11,8 +11,23 @@ public class RegisterReq {
     @Email(message = "email 格式不正確")
     private String email;
 
-    public RegisterReq() {}
+    @NotBlank(message = "userName 不能是空的")
+    private String userName;
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }
