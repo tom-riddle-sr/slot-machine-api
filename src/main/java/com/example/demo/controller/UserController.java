@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.BalanceRes;
+import com.example.demo.dto.HistoryRes;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -42,5 +43,10 @@ public class UserController {
     public BalanceRes getBalance(@PathVariable int id) {
         int balance = userService.getBalance(id);
         return new BalanceRes(id, balance);
+    }
+
+    @GetMapping("/{id}/history")
+    public HistoryRes getHistory(@PathVariable int id) {
+        return userService.getHistory(id);
     }
 }

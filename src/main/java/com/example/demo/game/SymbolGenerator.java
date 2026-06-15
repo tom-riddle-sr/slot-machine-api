@@ -47,3 +47,42 @@ public class SymbolGenerator {
         return SymbolType.CHERRY;
     }
 }
+
+
+/* ===== 原本寫好的版本（卡住可參考，完成後刪掉這整段）=====
+
+public int calculate(List<SymbolType> board, int bet) {
+    int win = 0;
+    for (int[] line : LINES) {
+        SymbolType a = board.get(line[0]);
+        SymbolType b = board.get(line[1]);
+        SymbolType c = board.get(line[2]);
+        win += lineWin(a, b, c, bet);
+
+    return win;
+}
+
+private int lineWin(SymbolType a, SymbolType b, SymbolType c, int bet) {
+    if (a.isWild() && b.isWild() && c.isWild()) {
+        return bet * 100;
+    }
+    SymbolType target = null;
+    for (SymbolType s : new SymbolType[]{a, b, c}) {
+        if (s.isWild()) {
+            continue;
+        }
+        if (s.isScatter()) {
+            return 0;
+        }
+        if (target == null) {
+            target = s;
+        } else if (target != s) {
+            return 0;
+        }
+    }
+    return bet * target.getMultiplier();
+}
+
+===== 參考結束 ===== */
+
+

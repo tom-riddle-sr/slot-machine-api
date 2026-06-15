@@ -1,6 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.HistoryRes;
+import com.example.demo.dto.SpinRecordDto;
+import com.example.demo.entity.SpinRecord;
 import com.example.demo.entity.User;
+import com.example.demo.repository.SpinRecordRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,10 +15,13 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SpinRecordRepository spinRecordRepository;
     private final StringRedisTemplate redisTemplate;
 
-    public UserService(UserRepository userRepository, StringRedisTemplate redisTemplate) {
+    public UserService(UserRepository userRepository, SpinRecordRepository spinRecordRepository,
+                       StringRedisTemplate redisTemplate) {
         this.userRepository = userRepository;
+        this.spinRecordRepository = spinRecordRepository;
         this.redisTemplate = redisTemplate;
     }
 
@@ -54,6 +61,19 @@ public class UserService {
 
         // 4) 回傳
         return balance;
+    }
+
+    public HistoryRes getHistory(int userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+
+        List<SpinRecord> records = spinRecordRepository.findByUserId(userId);
+        List<SpinRecordDto> dtos = records.stream()
+                .map(r -> new SpinRecordDto(r.getSymbols(), r.getBet(), r.getWin(),
+                        r.isFreeGame(), r.getFreeGameRound(), r.getCreatedAt()))
+                .toList();
+
+        return new HistoryRes(userId, dtos);
     }
 
 }
