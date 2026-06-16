@@ -46,7 +46,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}/history")
-    public HistoryRes getHistory(@PathVariable int id) {
-        return userService.getHistory(id);
+    public HistoryRes getHistory(@PathVariable int id,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        return userService.getHistory(id, page, size);
     }
+
 }

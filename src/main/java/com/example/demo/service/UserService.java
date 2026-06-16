@@ -9,6 +9,10 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 @Service
@@ -63,17 +67,17 @@ public class UserService {
         return balance;
     }
 
-    public HistoryRes getHistory(int userId) {
+    public HistoryRes getHistory(int userId, int page, int size) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+        
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SpinRecord> result = spinRecordRepository.findByUserId(userId, pageable);
 
-        List<SpinRecord> records = spinRecordRepository.findByUserId(userId);
-        List<SpinRecordDto> dtos = records.stream()
+        return new HistoryRes(userId, result.getContent().stream()
                 .map(r -> new SpinRecordDto(r.getSymbols(), r.getBet(), r.getWin(),
                         r.isFreeGame(), r.getFreeGameRound(), r.getCreatedAt()))
-                .toList();
-
-        return new HistoryRes(userId, dtos);
+                .toList());
     }
 
 }
